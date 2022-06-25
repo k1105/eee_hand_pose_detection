@@ -5,7 +5,7 @@ import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
 import Webcam from "react-webcam";
 import { Canvas, useFrame } from "@react-three/fiber";
 
-const scale = (point) => -(point * 1000 - 70) / 50;
+const scale = (point) => -(point * 800) / 50;
 
 const Finger = ({ predictionsRef, fingerIndex }) => {
   const jointBottom = React.useRef();
@@ -14,7 +14,7 @@ const Finger = ({ predictionsRef, fingerIndex }) => {
   const jointTop = React.useRef();
 
   const updateJoint = (point, thumb) => {
-    thumb.current.position.x = scale(point.x);
+    thumb.current.position.x = -scale(point.x);
     thumb.current.position.y = scale(point.y);
     thumb.current.position.z = scale(point.z);
   };
@@ -68,7 +68,7 @@ const Hand = ({ predictionsRef }) => {
   useFrame(() => {
     if (predictionsRef.current.length) {
       const point = predictionsRef.current[0].keypoints3D[0];
-      palm.current.position.x = scale(point.x);
+      palm.current.position.x = -scale(point.x);
       palm.current.position.y = scale(point.y);
       palm.current.position.z = scale(point.z);
     }
