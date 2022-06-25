@@ -1,40 +1,40 @@
 import React from "react";
 import "./styles.css";
 import "@tensorflow/tfjs";
-import * as handpose from "@tensorflow-models/handpose";
+import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
 import Webcam from "react-webcam";
 import { Canvas, useFrame } from "@react-three/fiber";
 
-const scale = (point) => -(point - 70) / 50;
+const scale = (point) => -(point * 1000 - 70) / 50;
 
-const Finger = ({ predictionsRef, fingerName }) => {
+const Finger = ({ predictionsRef, fingerIndex }) => {
   const jointBottom = React.useRef();
   const jointMiddleBottom = React.useRef();
   const jointMiddleTop = React.useRef();
   const jointTop = React.useRef();
 
   const updateJoint = (point, thumb) => {
-    thumb.current.position.x = scale(point[0]);
-    thumb.current.position.y = scale(point[1]);
-    thumb.current.position.z = scale(point[2]);
+    thumb.current.position.x = scale(point.x);
+    thumb.current.position.y = scale(point.y);
+    thumb.current.position.z = scale(point.z);
   };
 
   useFrame(() => {
     if (predictionsRef.current.length) {
       updateJoint(
-        predictionsRef.current[0].annotations[fingerName][0],
+        predictionsRef.current[0].keypoints3D[Number(fingerIndex)],
         jointBottom
       );
       updateJoint(
-        predictionsRef.current[0].annotations[fingerName][1],
+        predictionsRef.current[0].keypoints3D[Number(fingerIndex) + 1],
         jointMiddleBottom
       );
       updateJoint(
-        predictionsRef.current[0].annotations[fingerName][2],
+        predictionsRef.current[0].keypoints3D[Number(fingerIndex) + 2],
         jointMiddleTop
       );
       updateJoint(
-        predictionsRef.current[0].annotations[fingerName][3],
+        predictionsRef.current[0].keypoints3D[Number(fingerIndex) + 3],
         jointTop
       );
     }
@@ -67,10 +67,10 @@ const Hand = ({ predictionsRef }) => {
 
   useFrame(() => {
     if (predictionsRef.current.length) {
-      const point = predictionsRef.current[0].annotations.palmBase[0];
-      palm.current.position.x = scale(point[0]);
-      palm.current.position.y = scale(point[1]);
-      palm.current.position.z = scale(point[2]);
+      const point = predictionsRef.current[0].keypoints3D[0];
+      palm.current.position.x = scale(point.x);
+      palm.current.position.y = scale(point.y);
+      palm.current.position.z = scale(point.z);
     }
   });
 
@@ -80,11 +80,11 @@ const Hand = ({ predictionsRef }) => {
         <sphereBufferGeometry attach="geometry" args={[0.1, 32, 32]} />
         <meshStandardMaterial attach="material" color="#3867d6" />
       </mesh>
-      <Finger predictionsRef={predictionsRef} fingerName="thumb" />
-      <Finger predictionsRef={predictionsRef} fingerName="ringFinger" />
-      <Finger predictionsRef={predictionsRef} fingerName="middleFinger" />
-      <Finger predictionsRef={predictionsRef} fingerName="indexFinger" />
-      <Finger predictionsRef={predictionsRef} fingerName="pinky" />
+      <Finger predictionsRef={predictionsRef} fingerIndex="1" />
+      <Finger predictionsRef={predictionsRef} fingerIndex="5" />
+      <Finger predictionsRef={predictionsRef} fingerIndex="9" />
+      <Finger predictionsRef={predictionsRef} fingerIndex="13" />
+      <Finger predictionsRef={predictionsRef} fingerIndex="17" />
     </>
   );
 };
@@ -99,8 +99,7 @@ export default function App() {
   const capture = React.useCallback(async () => {
     if (webcamRef.current && modelRef.current) {
       const predictions = await modelRef.current.estimateHands(
-        webcamRef.current.getCanvas(),
-        true
+        webcamRef.current.getCanvas()
       );
 
       if (predictions) {
@@ -117,7 +116,15 @@ export default function App() {
 
   React.useEffect(() => {
     const load = async () => {
-      modelRef.current = await handpose.load();
+      const model = handPoseDetection.SupportedModels.MediaPipeHands;
+      const detectorConfig = {
+        runtime: "tfjs",
+        modelType: "full",
+      };
+      modelRef.current = await handPoseDetection.createDetector(
+        model,
+        detectorConfig
+      );
     };
 
     load();
