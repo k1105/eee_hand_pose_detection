@@ -1,4 +1,4 @@
-import React from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
 import "./styles.css";
 import "@tensorflow/tfjs";
 import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
@@ -7,13 +7,13 @@ import { Canvas } from "@react-three/fiber";
 import { Hand } from "./Hand";
 
 export default function App() {
-  const webcamRef = React.useRef(null);
-  const modelRef = React.useRef(null);
-  const requestRef = React.useRef(null);
-  const predictionsRef = React.useRef(null);
-  const [ready, setReady] = React.useState(false);
+  const webcamRef = useRef(null);
+  const modelRef = useRef(null);
+  const requestRef = useRef(null);
+  const predictionsRef = useRef(null);
+  const [ready, setReady] = useState(false);
 
-  const capture = React.useCallback(async () => {
+  const capture = useCallback(async () => {
     if (webcamRef.current && modelRef.current) {
       const predictions = await modelRef.current.estimateHands(
         webcamRef.current.getCanvas()
@@ -24,14 +24,16 @@ export default function App() {
       }
     }
 
+    // ready stateが更新されてもなお同じreadyの値がよばれ続けてしまう
     if (ready) {
       requestRef.current = requestAnimationFrame(capture);
     } else {
+      //not working
       requestRef.current = null;
     }
   }, [ready]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const load = async () => {
       const model = handPoseDetection.SupportedModels.MediaPipeHands;
       const detectorConfig = {
@@ -47,13 +49,13 @@ export default function App() {
     load();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (ready) {
       requestRef.current = requestAnimationFrame(capture);
     } else {
       if (requestRef.current) {
         console.log("cancel");
-        cancelAnimationFrame(requestRef.current);
+        cancelAnimationFrame(requestRef.current); //not working
       }
     }
   }, [ready]);
