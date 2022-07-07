@@ -3,8 +3,8 @@ import "./styles.css";
 import "@tensorflow/tfjs";
 import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
 import Webcam from "react-webcam";
+import { Hand } from "./lib/Hand";
 import { Canvas } from "@react-three/fiber";
-import { Hand } from "./Hand";
 
 export default function App() {
   const webcamRef = useRef(null);
@@ -15,18 +15,21 @@ export default function App() {
 
   const capture = useCallback(async () => {
     if (webcamRef.current && modelRef.current) {
+      //webcamとmodelのインスタンスが生成されていたら
       const predictions = await modelRef.current.estimateHands(
         webcamRef.current.getCanvas()
-      );
+      ); //webcamの現時点でのフレームを取得し、ポーズ推定の結果をpredictionsに非同期で格納
 
       if (predictions) {
+        //predictionsが存在していたら
         predictionsRef.current = predictions;
+        console.log(predictions);
       }
     }
 
-    // ready stateが更新されてもなお同じreadyの値がよばれ続けてしまう
+    // need to fix: ready stateが更新されてもなお同じreadyの値がよばれ続けてしまう
     if (ready) {
-      requestRef.current = requestAnimationFrame(capture);
+      requestRef.current = requestAnimationFrame(capture); //captureを実施
     } else {
       //not working
       requestRef.current = null;
@@ -112,10 +115,13 @@ export default function App() {
             setReady(!ready);
           }}
         >
-          Start hand tracking{" "}
-          <span role="img" aria-label="Start">
-            🖐
-          </span>
+          {(() => {
+            if (!ready) {
+              return `Start hand tracking 🖐`;
+            } else {
+              return `Stop hand tracking 🖐`;
+            }
+          })()}
         </button>
       </div>
     </>
