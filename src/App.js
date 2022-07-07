@@ -13,6 +13,18 @@ export default function App() {
   const predictionsRef = useRef(null);
   const [ready, setReady] = useState(false);
 
+  let handpose = [
+    {
+      length: 0,
+      thumb: [[], [], [], []],
+      indexFinger: [[], [], [], []],
+      palmBase: [[]],
+      middleFinger: [[], [], [], []],
+      ringFinger: [[], [], [], []],
+      pinky: [[], [], [], []],
+    },
+  ];
+
   const capture = useCallback(async () => {
     if (webcamRef.current && modelRef.current) {
       const predictions = await modelRef.current.estimateHands(
@@ -21,6 +33,95 @@ export default function App() {
 
       if (predictions) {
         predictionsRef.current = predictions;
+
+        if (predictions.length) {
+          handpose[0].thumb[0].push({
+            x: predictions[0].keypoints[1].x,
+            y: predictions[0].keypoints[1].y,
+          });
+          handpose[0].thumb[1].push({
+            x: predictions[0].keypoints[2].x,
+            y: predictions[0].keypoints[2].y,
+          });
+          handpose[0].thumb[2].push({
+            x: predictions[0].keypoints[3].x,
+            y: predictions[0].keypoints[3].y,
+          });
+          handpose[0].thumb[3].push({
+            x: predictions[0].keypoints[4].x,
+            y: predictions[0].keypoints[4].y,
+          });
+          handpose[0].indexFinger[0].push({
+            x: predictions[0].keypoints[5].x,
+            y: predictions[0].keypoints[5].y,
+          });
+          handpose[0].indexFinger[1].push({
+            x: predictions[0].keypoints[6].x,
+            y: predictions[0].keypoints[6].y,
+          });
+          handpose[0].indexFinger[2].push({
+            x: predictions[0].keypoints[7].x,
+            y: predictions[0].keypoints[7].y,
+          });
+          handpose[0].indexFinger[3].push({
+            x: predictions[0].keypoints[8].x,
+            y: predictions[0].keypoints[8].y,
+          });
+          handpose[0].palmBase[0].push({
+            x: predictions[0].keypoints[0].x,
+            y: predictions[0].keypoints[0].y,
+          });
+          handpose[0].middleFinger[0].push({
+            x: predictions[0].keypoints[9].x,
+            y: predictions[0].keypoints[9].y,
+          });
+          handpose[0].middleFinger[1].push({
+            x: predictions[0].keypoints[10].x,
+            y: predictions[0].keypoints[10].y,
+          });
+          handpose[0].middleFinger[2].push({
+            x: predictions[0].keypoints[11].x,
+            y: predictions[0].keypoints[11].y,
+          });
+          handpose[0].middleFinger[3].push({
+            x: predictions[0].keypoints[12].x,
+            y: predictions[0].keypoints[12].y,
+          });
+
+          handpose[0].ringFinger[0].push({
+            x: predictions[0].keypoints[13].x,
+            y: predictions[0].keypoints[13].y,
+          });
+          handpose[0].ringFinger[1].push({
+            x: predictions[0].keypoints[14].x,
+            y: predictions[0].keypoints[14].y,
+          });
+          handpose[0].ringFinger[2].push({
+            x: predictions[0].keypoints[15].x,
+            y: predictions[0].keypoints[15].y,
+          });
+          handpose[0].ringFinger[3].push({
+            x: predictions[0].keypoints[16].x,
+            y: predictions[0].keypoints[16].y,
+          });
+          handpose[0].pinky[0].push({
+            x: predictions[0].keypoints[17].x,
+            y: predictions[0].keypoints[17].y,
+          });
+          handpose[0].pinky[1].push({
+            x: predictions[0].keypoints[18].x,
+            y: predictions[0].keypoints[18].y,
+          });
+          handpose[0].pinky[2].push({
+            x: predictions[0].keypoints[19].x,
+            y: predictions[0].keypoints[19].y,
+          });
+          handpose[0].pinky[3].push({
+            x: predictions[0].keypoints[20].x,
+            y: predictions[0].keypoints[20].y,
+          });
+          handpose[0].length++;
+        }
       }
     }
 
@@ -116,6 +217,24 @@ export default function App() {
           <span role="img" aria-label="Start">
             🖐
           </span>
+        </button>
+        <button
+          onClick={() => {
+            const downloadLink = document.createElement("a");
+            downloadLink.download = "export.json";
+            downloadLink.href = URL.createObjectURL(
+              new Blob([JSON.stringify(handpose[0])], {
+                type: "application/json",
+              })
+            );
+            downloadLink.setAttribute("hidden", true);
+
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            downloadLink.remove();
+          }}
+        >
+          download
         </button>
       </div>
     </>
