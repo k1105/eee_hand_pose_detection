@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/eee_hand_pose_detection/static/css/main.ba7b0581.css",
+    "main.js": "/eee_hand_pose_detection/static/js/main.69be948d.js",
+    "static/js/787.04ff5025.chunk.js": "/eee_hand_pose_detection/static/js/787.04ff5025.chunk.js",
+    "index.html": "/eee_hand_pose_detection/index.html",
+    "main.ba7b0581.css.map": "/eee_hand_pose_detection/static/css/main.ba7b0581.css.map",
+    "main.69be948d.js.map": "/eee_hand_pose_detection/static/js/main.69be948d.js.map",
+    "787.04ff5025.chunk.js.map": "/eee_hand_pose_detection/static/js/787.04ff5025.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ba7b0581.css",
+    "static/js/main.69be948d.js"
+  ]
+}
