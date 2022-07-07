@@ -3,8 +3,8 @@ import "./styles.css";
 import "@tensorflow/tfjs";
 import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
 import Webcam from "react-webcam";
-import { Canvas } from "@react-three/fiber";
-import { Hand } from "./Hand";
+import { ConnectedFinger } from "./lib/ConnectedFinger";
+import { IndexFinger } from "./lib/IndexFinger";
 
 export default function App() {
   const webcamRef = useRef(null);
@@ -15,18 +15,20 @@ export default function App() {
 
   const capture = useCallback(async () => {
     if (webcamRef.current && modelRef.current) {
+      //webcamとmodelのインスタンスが生成されていたら
       const predictions = await modelRef.current.estimateHands(
         webcamRef.current.getCanvas()
-      );
+      ); //webcamの現時点でのフレームを取得し、ポーズ推定の結果をpredictionsに非同期で格納
 
       if (predictions) {
+        //predictionsが存在していたら
         predictionsRef.current = predictions;
       }
     }
 
-    // ready stateが更新されてもなお同じreadyの値がよばれ続けてしまう
+    // need to fix: ready stateが更新されてもなお同じreadyの値がよばれ続けてしまう
     if (ready) {
-      requestRef.current = requestAnimationFrame(capture);
+      requestRef.current = requestAnimationFrame(capture); //captureを実施
     } else {
       //not working
       requestRef.current = null;
@@ -62,23 +64,7 @@ export default function App() {
 
   return (
     <>
-      <Canvas shadowmap="true" srgb="true" camera={{ position: [0, 0, 5] }}>
-        <ambientLight intensity={0.4} />
-        <spotLight
-          position={[3, 0, 11]}
-          angle={0.6}
-          penumbra={1}
-          intensity={0.2}
-          shadow-mapSize-width={2048}
-          shadow-mapSize-height={2048}
-          shadow-bias={-0.0001}
-        />
-        <mesh position={[0, 0, -10]} receiveShadow castShadow>
-          <planeBufferGeometry attach="geometry" args={[1000, 1000]} />
-          <meshPhongMaterial attach="material" color="#00010a" />
-        </mesh>
-        {ready && <Hand predictionsRef={predictionsRef} />}
-      </Canvas>
+      {ready && <ConnectedFinger predictionsRef={predictionsRef} />}
       <div
         style={{
           position: "absolute",
@@ -112,10 +98,13 @@ export default function App() {
             setReady(!ready);
           }}
         >
-          Start hand tracking{" "}
-          <span role="img" aria-label="Start">
-            🖐
-          </span>
+          {(() => {
+            if (!ready) {
+              return `Start hand tracking 🖐`;
+            } else {
+              return `Stop hand tracking 🖐`;
+            }
+          })()}
         </button>
       </div>
     </>

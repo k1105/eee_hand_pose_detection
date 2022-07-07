@@ -1,5 +1,4 @@
 import React from "react";
-import "./styles.css";
 import "@tensorflow/tfjs";
 import { useFrame } from "@react-three/fiber";
 import { Finger } from "./Finger";
