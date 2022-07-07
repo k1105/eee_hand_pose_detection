@@ -6,6 +6,7 @@ import Webcam from "react-webcam";
 import { DrawTail } from "./sketches/DrawTail";
 import { DrawLegToFoot } from "./sketches/DrawLegToFoot";
 import { DrawShoulderToHeadAndJaw } from "./sketches/DrawShoulderToHeadAndJaw";
+import { DrawArmToHand } from "./sketches/DrawArmToHand";
 
 export default function App() {
   const webcamRef = useRef(null);
@@ -66,7 +67,7 @@ export default function App() {
   return (
     <>
       {/* //optional sketch */}
-      {ready && <DrawShoulderToHeadAndJaw predictionsRef={predictionsRef} />}
+      {ready && <DrawArmToHand predictionsRef={predictionsRef} />}
       <div
         style={{
           position: "absolute",
