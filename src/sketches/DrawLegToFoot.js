@@ -33,7 +33,7 @@ export const DrawLegToFoot = ({ predictionsRef }) => {
 
           p5.push();
           //leg
-          p5.rotate((3 * p5.PI) / 2);
+          p5.rotate((6.1 * p5.PI) / 6);
           pos = rigmap(origin, finger[1], 106.3);
           console.log(pos);
           drawInterporatedEllipse(p5, origin, pos, hip_r, leg_r[0], 100);
@@ -47,7 +47,14 @@ export const DrawLegToFoot = ({ predictionsRef }) => {
           drawInterporatedEllipse(p5, origin, pos, leg_r[1], leg_r[2], 100);
           pos_prev = pos;
           pos = rigmap(pos, finger[2], 34.1);
-          drawInterporatedEllipse(p5, pos_prev, pos, leg_r[2], leg_r[3], 100);
+          drawInterporatedEllipse(
+            p5,
+            pos_prev,
+            { x: -pos.x, y: pos.y },
+            leg_r[2],
+            leg_r[3],
+            100
+          );
           p5.pop();
         } catch (e) {}
       }

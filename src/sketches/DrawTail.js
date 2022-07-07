@@ -30,6 +30,7 @@ export const DrawTail = ({ predictionsRef }) => {
           let pos;
           let pos_prev;
           p5.translate(p5.width / 2, p5.height / 2);
+          p5.rotate(-p5.PI / 2);
 
           //tail
           pos = rigmap(origin, finger[0], 97.6);

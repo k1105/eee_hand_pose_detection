@@ -34,18 +34,24 @@ export const DrawShoulderToHeadAndJaw = ({ predictionsRef }) => {
           p5.translate(p5.width / 2, p5.height / 2);
 
           p5.push();
-          p5.rotate(p5.PI);
-          p5.rotate(-p5.PI / 6);
+          p5.rotate(p5.PI / 4);
           //shoulder
           //finger = shoulder_finger;
           pos = rigmap(origin, finger[1], 93.3);
-          drawInterporatedEllipse(p5, origin, pos, hip_r, shoulder_r, 100);
+          drawInterporatedEllipse(
+            p5,
+            origin,
+            { x: -pos.x, y: pos.y },
+            hip_r,
+            shoulder_r,
+            100
+          );
           pos_prev = pos;
           pos = rigmap(pos_prev, finger[2], 132.9);
           drawInterporatedEllipse(
             p5,
-            pos_prev,
-            pos,
+            { x: -pos_prev.x, y: pos_prev.y },
+            { x: -pos.x, y: pos.y },
             shoulder_r,
             head_r[0],
             100
@@ -53,10 +59,17 @@ export const DrawShoulderToHeadAndJaw = ({ predictionsRef }) => {
 
           //head
           //finger = head_finger;
-          p5.translate(pos.x, pos.y);
+          p5.translate(-pos.x, pos.y);
           p5.rotate(p5.PI / 6);
           pos = rigmap(origin, finger[1], 89);
-          drawInterporatedEllipse(p5, origin, pos, head_r[0], head_r[1], 100);
+          drawInterporatedEllipse(
+            p5,
+            origin,
+            { x: -pos.x, y: pos.y },
+            head_r[0],
+            head_r[1],
+            100
+          );
           //jaw
           //finger = jaw_finger;
           p5.rotate(p5.PI / 3);
