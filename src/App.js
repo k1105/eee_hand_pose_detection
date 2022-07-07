@@ -3,8 +3,7 @@ import "./styles.css";
 import "@tensorflow/tfjs";
 import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
 import Webcam from "react-webcam";
-import { ConnectedFinger } from "./lib/ConnectedFinger";
-import { IndexFinger } from "./lib/IndexFinger";
+import { DrawTail } from "./lib/DrawTail";
 
 export default function App() {
   const webcamRef = useRef(null);
@@ -64,7 +63,8 @@ export default function App() {
 
   return (
     <>
-      {ready && <ConnectedFinger predictionsRef={predictionsRef} />}
+      {/* //optional sketch */}
+      {ready && <DrawTail predictionsRef={predictionsRef} />}
       <div
         style={{
           position: "absolute",
