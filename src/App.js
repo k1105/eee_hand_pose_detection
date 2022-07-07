@@ -3,8 +3,8 @@ import "./styles.css";
 import "@tensorflow/tfjs";
 import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
 import Webcam from "react-webcam";
-import { Hand } from "./lib/Hand";
-import { Canvas } from "@react-three/fiber";
+import { ConnectedFinger } from "./lib/ConnectedFinger";
+import { IndexFinger } from "./lib/IndexFinger";
 
 export default function App() {
   const webcamRef = useRef(null);
@@ -23,7 +23,6 @@ export default function App() {
       if (predictions) {
         //predictionsが存在していたら
         predictionsRef.current = predictions;
-        console.log(predictions);
       }
     }
 
@@ -65,23 +64,7 @@ export default function App() {
 
   return (
     <>
-      <Canvas shadowmap="true" srgb="true" camera={{ position: [0, 0, 5] }}>
-        <ambientLight intensity={0.4} />
-        <spotLight
-          position={[3, 0, 11]}
-          angle={0.6}
-          penumbra={1}
-          intensity={0.2}
-          shadow-mapSize-width={2048}
-          shadow-mapSize-height={2048}
-          shadow-bias={-0.0001}
-        />
-        <mesh position={[0, 0, -10]} receiveShadow castShadow>
-          <planeBufferGeometry attach="geometry" args={[1000, 1000]} />
-          <meshPhongMaterial attach="material" color="#00010a" />
-        </mesh>
-        {ready && <Hand predictionsRef={predictionsRef} />}
-      </Canvas>
+      {ready && <ConnectedFinger predictionsRef={predictionsRef} />}
       <div
         style={{
           position: "absolute",
