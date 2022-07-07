@@ -1,4 +1,6 @@
 import { ReactP5Wrapper } from "react-p5-wrapper";
+import { drawInterporatedEllipse } from "../lib/drawInterporatedEllipse";
+import { rigmap } from "../lib/rigmap";
 
 export const DrawTail = ({ predictionsRef }) => {
   const hip_r = 130;
@@ -18,10 +20,10 @@ export const DrawTail = ({ predictionsRef }) => {
           const keys = predictionsRef.current[0].keypoints;
           const finger = [
             // data
-            keys[5],
-            keys[6],
-            keys[7],
-            keys[8],
+            { x: keys[5].x - keys[0].x, y: keys[5].y - keys[0].y },
+            { x: keys[6].x - keys[5].x, y: keys[6].y - keys[5].y },
+            { x: keys[7].x - keys[6].x, y: keys[7].y - keys[6].y },
+            { x: keys[8].x - keys[7].x, y: keys[8].y - keys[7].y },
           ];
 
           const origin = { x: 0, y: 0 };
@@ -37,27 +39,13 @@ export const DrawTail = ({ predictionsRef }) => {
           drawInterporatedEllipse(p5, pos_prev, pos, tail_r[0], tail_r[1], 100);
           pos_prev = pos;
           pos = rigmap(pos_prev, finger[2], 67);
-          drawInterporatedEllipse(p5, pos_prev, pos, tail_r[1], tail_r[2], 100);
+          drawInterporatedEllipse(p5, pos_prev, pos, tail_r[1], tail_r[2], 30);
           pos_prev = pos;
           pos = rigmap(pos_prev, finger[3], 51.3);
-          drawInterporatedEllipse(p5, pos_prev, pos, tail_r[2], tail_r[3], 100);
+          drawInterporatedEllipse(p5, pos_prev, pos, tail_r[2], tail_r[3], 30);
         } catch (e) {}
       }
     };
   }
-
-  const drawInterporatedEllipse = (p5, pos0, pos1, r0, r1, num) => {
-    for (let t = 0; t < num; t++) {
-      const x = ((pos1.x - pos0.x) / num) * t + pos0.x;
-      const y = ((pos1.y - pos0.y) / num) * t + pos0.y;
-      const r = ((r1 - r0) / num) * t + r0;
-      p5.ellipse(x, y, r);
-    }
-  };
-
-  const rigmap = (start, mot, d) => {
-    const len = Math.sqrt(mot.x ** 2 + mot.y ** 2);
-    return { x: (d / len) * mot.x + start.x, y: (d / len) * mot.y + start.y };
-  };
   return <ReactP5Wrapper sketch={sketch} />;
 };

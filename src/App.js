@@ -3,7 +3,8 @@ import "./styles.css";
 import "@tensorflow/tfjs";
 import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
 import Webcam from "react-webcam";
-import { DrawTail } from "./lib/DrawTail";
+import { DrawTail } from "./sketches/DrawTail";
+import { DrawLegToFoot } from "./sketches/DrawLegToFoot";
 
 export default function App() {
   const webcamRef = useRef(null);
