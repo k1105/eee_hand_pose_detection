@@ -5,6 +5,7 @@ import * as handPoseDetection from "@tensorflow-models/hand-pose-detection";
 import Webcam from "react-webcam";
 import { DrawTail } from "./sketches/DrawTail";
 import { DrawLegToFoot } from "./sketches/DrawLegToFoot";
+import { DrawShoulderToHeadAndJaw } from "./sketches/DrawShoulderToHeadAndJaw";
 
 export default function App() {
   const webcamRef = useRef(null);
@@ -65,7 +66,7 @@ export default function App() {
   return (
     <>
       {/* //optional sketch */}
-      {ready && <DrawTail predictionsRef={predictionsRef} />}
+      {ready && <DrawShoulderToHeadAndJaw predictionsRef={predictionsRef} />}
       <div
         style={{
           position: "absolute",
