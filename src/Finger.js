@@ -40,19 +40,19 @@ export const Finger = ({ predictionsRef, fingerIndex }) => {
 
   return (
     <>
-      <mesh castShadow receiveShadow ref={jointBottom} scale={[1, 1, 1]}>
+      <mesh ref={jointBottom} scale={[1, 1, 1]}>
         <sphereBufferGeometry attach="geometry" args={[0.1, 32, 32]} />
         <meshStandardMaterial attach="material" color="white" />
       </mesh>
-      <mesh castShadow receiveShadow ref={jointMiddleBottom} scale={[1, 1, 1]}>
+      <mesh ref={jointMiddleBottom} scale={[1, 1, 1]}>
         <sphereBufferGeometry attach="geometry" args={[0.1, 32, 32]} />
         <meshStandardMaterial attach="material" color="white" />
       </mesh>
-      <mesh castShadow receiveShadow ref={jointMiddleTop} scale={[1, 1, 1]}>
+      <mesh ref={jointMiddleTop} scale={[1, 1, 1]}>
         <sphereBufferGeometry attach="geometry" args={[0.1, 32, 32]} />
         <meshStandardMaterial attach="material" color="white" />
       </mesh>
-      <mesh castShadow receiveShadow ref={jointTop} scale={[1, 1, 1]}>
+      <mesh ref={jointTop} scale={[1, 1, 1]}>
         <sphereBufferGeometry attach="geometry" args={[0.1, 32, 32]} />
         <meshStandardMaterial attach="material" color="#eb3b5a" />
       </mesh>
