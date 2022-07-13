@@ -14,6 +14,7 @@ export default function App() {
   const requestRef = useRef(null);
   const predictionsRef = useRef(null);
   const [ready, setReady] = useState(false);
+  let finger = { size: 0, bottom: [], middle: [], digital: [], tip: [] };
 
   const capture = useCallback(async () => {
     if (webcamRef.current && modelRef.current) {
@@ -25,6 +26,26 @@ export default function App() {
       if (predictions) {
         //predictionsが存在していたら
         predictionsRef.current = predictions;
+        if (predictions.length) {
+          const keys = predictions[0].keypoints;
+          finger.bottom.push({
+            x: keys[5].x - keys[0].x,
+            y: keys[5].y - keys[0].y,
+          });
+          finger.middle.push({
+            x: keys[6].x - keys[5].x,
+            y: keys[6].y - keys[5].y,
+          });
+          finger.digital.push({
+            x: keys[7].x - keys[6].x,
+            y: keys[7].y - keys[6].y,
+          });
+          finger.tip.push({
+            x: keys[8].x - keys[7].x,
+            y: keys[8].y - keys[7].y,
+          });
+          finger.size++;
+        }
       }
     }
 
@@ -67,7 +88,7 @@ export default function App() {
   return (
     <>
       {/* //optional sketch */}
-      {ready && <DrawArmToHand predictionsRef={predictionsRef} />}
+      {ready && <DrawLegToFoot predictionsRef={predictionsRef} />}
       <div
         style={{
           position: "absolute",
@@ -108,6 +129,24 @@ export default function App() {
               return `Stop hand tracking 🖐`;
             }
           })()}
+        </button>
+        <button
+          onClick={() => {
+            const downloadLink = document.createElement("a");
+            downloadLink.download = "export.json";
+            downloadLink.href = URL.createObjectURL(
+              new Blob([JSON.stringify(finger)], {
+                type: "application/json",
+              })
+            );
+            downloadLink.setAttribute("hidden", true);
+
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            downloadLink.remove();
+          }}
+        >
+          download
         </button>
       </div>
     </>
