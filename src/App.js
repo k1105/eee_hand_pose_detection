@@ -11,6 +11,7 @@ export default function App() {
   const requestRef = useRef(null);
   const predictionsRef = useRef(null);
   const [ready, setReady] = useState(false);
+  const lostCountRef = useRef(0);
 
   const capture = useCallback(async () => {
     if (webcamRef.current && modelRef.current) {
@@ -21,7 +22,16 @@ export default function App() {
 
       if (predictions) {
         //predictionsが存在していたら
-        predictionsRef.current = predictions;
+        if (predictions.length > 0) {
+          predictionsRef.current = predictions;
+          lostCountRef.current = 0;
+        } else {
+          lostCountRef.current++;
+        }
+
+        if (lostCountRef.current > 10) {
+          predictionsRef.current = [];
+        }
       }
     }
 
@@ -48,6 +58,8 @@ export default function App() {
     };
 
     load();
+
+    setReady(true);
   }, []);
 
   useEffect(() => {
@@ -68,8 +80,8 @@ export default function App() {
       <div
         style={{
           position: "absolute",
-          right: 10,
-          top: 10,
+          right: -190,
+          top: -10,
         }}
       >
         <Webcam
@@ -92,21 +104,7 @@ export default function App() {
           top: 10,
           left: 10,
         }}
-      >
-        <button
-          onClick={() => {
-            setReady(!ready);
-          }}
-        >
-          {(() => {
-            if (!ready) {
-              return `Start hand tracking 🖐`;
-            } else {
-              return `Stop hand tracking 🖐`;
-            }
-          })()}
-        </button>
-      </div>
+      ></div>
     </>
   );
 }

@@ -16,42 +16,23 @@ export const separatedFinger = (p5, keys) => {
 
   p5.translate(3 * (keys[4].x - base_x), 3 * (keys[4].y - base_y));
   p5.rotate(p5.PI / 2 + p5.atan2(keys[4].y - keys[3].y, keys[4].x - keys[3].x));
-  for (let i = 5; i < 8; i++) {
-    //index finger
-    p5.line(
-      3 * (keys[i].x - keys[5].x),
-      3 * (keys[i].y - keys[5].y),
-      3 * (keys[i + 1].x - keys[5].x),
-      3 * (keys[i + 1].y - keys[5].y)
-    );
+
+  let start;
+  let end;
+  for(let n = 0; n < 4; n++) {
+    start = 4 * n + 5;
+    end = 4 * n + 8;
+
+    for (let i = start; i < end; i++) {
+      //middle finger
+      p5.line(
+        3 * (keys[i].x - keys[start].x),
+        3 * (keys[i].y - keys[start].y),
+        3 * (keys[i + 1].x - keys[start].x),
+        3 * (keys[i + 1].y - keys[start].y)
+      );
+    }
   }
-  for (let i = 9; i < 12; i++) {
-    //middle finger
-    p5.line(
-      3 * (keys[i].x - keys[9].x),
-      3 * (keys[i].y - keys[9].y),
-      3 * (keys[i + 1].x - keys[9].x),
-      3 * (keys[i + 1].y - keys[9].y)
-    );
-  }
-  for (let i = 13; i < 16; i++) {
-    //ring finger
-    p5.line(
-      3 * (keys[i].x - keys[13].x),
-      3 * (keys[i].y - keys[13].y),
-      3 * (keys[i + 1].x - keys[13].x),
-      3 * (keys[i + 1].y - keys[13].y)
-    );
-  }
-  for (let i = 17; i < 20; i++) {
-    //pinky
-    p5.line(
-      3 * (keys[i].x - keys[17].x),
-      3 * (keys[i].y - keys[17].y),
-      3 * (keys[i + 1].x - keys[17].x),
-      3 * (keys[i + 1].y - keys[17].y)
-    );
-  }
-  p5.pop();
+  
   p5.pop();
 };

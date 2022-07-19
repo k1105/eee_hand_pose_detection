@@ -63,5 +63,4 @@ export const connectedFinger = (p5, keys) => {
     );
   }
   p5.pop();
-  p5.pop();
 };
