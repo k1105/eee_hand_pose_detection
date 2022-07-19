@@ -54,7 +54,7 @@ export const DisplayFinger = ({ predictionsRef }) => {
       p5.push();
       if (typeof predictionsRef.current == "object") {
         try {
-          if (predictionsRef.current.length == 0) {
+          if (predictionsRef.current.length === 0) {
             if (!lost) {
               lost = true;
               lostAt = new Date().getTime();

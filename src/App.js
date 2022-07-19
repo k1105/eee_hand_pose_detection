@@ -71,7 +71,7 @@ export default function App() {
         cancelAnimationFrame(requestRef.current); //not working
       }
     }
-  }, [ready]);
+  }, [capture, ready]);
 
   return (
     <>
