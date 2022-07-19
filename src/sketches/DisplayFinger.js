@@ -4,6 +4,7 @@ import { connectedFinger } from "./connectedFinger";
 import { shrinkFinger } from "./shrinkFinger";
 import { spreadFinger } from "./spreadFinger";
 import { manyFinger } from "./manyFinger";
+import { organizeFinger } from "./organizeFinger";
 
 export const DisplayFinger = ({ predictionsRef }) => {
   const functions = [
@@ -12,6 +13,7 @@ export const DisplayFinger = ({ predictionsRef }) => {
     shrinkFinger,
     spreadFinger,
     manyFinger,
+    organizeFinger,
   ];
   let styleIndex = 0;
   let lostAt = 0;
@@ -48,6 +50,7 @@ export const DisplayFinger = ({ predictionsRef }) => {
     };
 
     p5.draw = () => {
+      let hands = [];
       // p5.background(0)
       p5.background(57, 127, 173);
       //p5.background(215, 224, 235);
@@ -58,13 +61,12 @@ export const DisplayFinger = ({ predictionsRef }) => {
             if (!lost) {
               lost = true;
               lostAt = new Date().getTime();
-              //styleIndex = Math.floor(p5.random()*functions.length);
-              //styleIndex = Math.floor(p5.random()*5)
             }
           } else {
             if (lost && new Date().getTime() - lostAt > 1000) {
               //トラッキングがロストしてから1s経ったら
-              styleIndex = (styleIndex + 1) % functions.length;
+              // styleIndex = (styleIndex + 1) % functions.length;
+              styleIndex = 5;
             }
             lost = false;
           }
@@ -74,9 +76,9 @@ export const DisplayFinger = ({ predictionsRef }) => {
             if (keyflames[index].length > 5) {
               keyflames[index].shift();
             }
-            const keys = calcAverageKeypoints(keyflames[index]);
-            functions[styleIndex](p5, keys);
+            hands.push(calcAverageKeypoints(keyflames[index]));
           }
+          functions[styleIndex](p5, hands);
         } catch (e) {}
       }
 
