@@ -5,16 +5,20 @@ import { shrinkFinger } from "./shrinkFinger";
 import { spreadFinger } from "./spreadFinger";
 import { manyFinger } from "./manyFinger";
 import { organizeFinger } from "./organizeFinger";
+import { indicateCircle } from "./indicateCircle";
+import { pileFinger } from "./pileFinger";
 
 export const DisplayFinger = ({ predictionsRef }) => {
-  const functions = [
-    separatedFinger,
-    connectedFinger,
-    shrinkFinger,
-    spreadFinger,
-    manyFinger,
-    organizeFinger,
-  ];
+  // const functions = [
+  //   separatedFinger,
+  //   connectedFinger,
+  //   shrinkFinger,
+  //   spreadFinger,
+  //   manyFinger,
+  //   organizeFinger,
+  // ];
+  const functions = [spreadFinger, organizeFinger, pileFinger];
+  // const functions = [indicateCircle];
   let styleIndex = 0;
   let lostAt = 0;
   let lost = false;
@@ -43,9 +47,10 @@ export const DisplayFinger = ({ predictionsRef }) => {
   function sketch(p5) {
     p5.setup = () => {
       p5.createCanvas(window.innerWidth, window.innerHeight);
-      p5.stroke(240, 233, 234);
-      // p5.stroke(245, 77, 1);
+      //p5.stroke(57, 127, 173);
+      //p5.stroke(245, 77, 1);
       //p5.stroke(9, 178, 106);
+      p5.stroke(220);
       p5.strokeWeight(10);
     };
 
@@ -53,7 +58,8 @@ export const DisplayFinger = ({ predictionsRef }) => {
       let hands = [];
       // p5.background(0)
       p5.background(57, 127, 173);
-      //p5.background(215, 224, 235);
+      //p5.background(255);
+      // p5.background(215, 224, 235);
       p5.push();
       if (typeof predictionsRef.current == "object") {
         try {
@@ -64,9 +70,9 @@ export const DisplayFinger = ({ predictionsRef }) => {
             }
           } else {
             if (lost && new Date().getTime() - lostAt > 1000) {
-              //トラッキングがロストしてから1s経ったら
-              // styleIndex = (styleIndex + 1) % functions.length;
-              styleIndex = 5;
+              // //トラッキングがロストしてから1s経ったら
+              styleIndex = (styleIndex + 1) % functions.length;
+              // styleIndex = 5;
             }
             lost = false;
           }
@@ -82,14 +88,14 @@ export const DisplayFinger = ({ predictionsRef }) => {
         } catch (e) {}
       }
 
-      p5.push();
-      // キャンバス左下にFPSを描画(小数点以下２桁を四捨五入)
-      let fps = p5.frameRate();
-      p5.fill(255);
-      p5.noStroke();
-      p5.text("FPS: " + fps.toFixed(2), 10, p5.height - 10);
-      p5.pop();
-      p5.pop();
+      // p5.push();
+      // // キャンバス左下にFPSを描画(小数点以下２桁を四捨五入)
+      // let fps = p5.frameRate();
+      // p5.fill(255);
+      // p5.noStroke();
+      // p5.text("FPS: " + fps.toFixed(2), 10, p5.height - 10);
+      // p5.pop();
+      // p5.pop();
     };
   }
   return <ReactP5Wrapper sketch={sketch} />;
